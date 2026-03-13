@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExLibris</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/books.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/reading.css">
+    <link rel="stylesheet" href="css/stats.css">
+</head>
+<body>
+
+<nav class="top-bar">
+    <div class="nav-item active" id="nav-home">Главная</div>
+    <div class="nav-item" id="nav-books">Книги</div>
+    <div class="nav-item" id="nav-reading">Чтение</div>
+    <div class="nav-item" id="nav-stats">Статистика</div>
+</nav>
+
+<div id="auth-message" class="message"></div>
+
+<main class="content">
+
+    <section id="auth-section" class="auth-card">
+        <h2 id="auth-title">Вход в ExLibris</h2>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Пароль" required>
+            <button type="submit" class="btn-primary">Войти</button>
+            <p class="toggle-text">Нет аккаунта? <span onclick="toggleAuth()">Зарегистрироваться</span></p>
+        </form>
+        <form id="register-form" style="display: none;">
+            <input type="email" id="reg-email" placeholder="Email" required>
+            <input type="password" id="reg-password" placeholder="Пароль (мин. 6)" required minlength="6">
+            <button type="submit" class="btn-primary">Создать аккаунт</button>
+            <p class="toggle-text">Уже есть аккаунт? <span onclick="toggleAuth()">Войти</span></p>
+        </form>
+    </section>
+
+    <div id="books-section" style="display: none;">
+        <div class="section-header">
+            <h2>Мои книги</h2>
+            <button class="btn-add" id="open-add-modal">+ Добавить</button>
+        </div>
+        <div class="books-toolbar">
+            <input type="text" id="books-search-input" class="books-search"
+                   placeholder="🔍  Поиск по названию, автору, серии...">
+            <div class="isbn-search">
+                <input type="text" id="isbn-search-input" placeholder="Точный ISBN...">
+                <button id="isbn-search-btn" class="btn-secondary">Найти по ISBN</button>
+                <button id="isbn-reset-btn" class="btn-secondary btn-secondary--muted">Сбросить</button>
+            </div>
+        </div>
+        <div id="series-filter-container"></div>
+        <div id="books-grid" class="books-grid"></div>
+        <div class="pagination-container">
+            <button type="button" id="prev-page" class="btn-pagination" disabled>← Назад</button>
+            <span id="page-info">Страница 1 из 1</span>
+            <button type="button" id="next-page" class="btn-pagination">Вперед →</button>
+        </div>
+    </div>
+
+    <section id="reading-section" style="display: none;">
+        <div class="section-header">
+            <h2>Чтение</h2>
+            <button class="btn-add" id="open-start-reading">+ Начать чтение</button>
+        </div>
+        <div class="reading-toolbar">
+            <input type="text" id="reading-search-input" class="reading-search"
+                   placeholder="🔍  Поиск по названию или автору...">
+        </div>
+        <div class="reading-filters">
+            <button class="reading-filter-btn active" data-status="READING">Читаю</button>
+            <button class="reading-filter-btn" data-status="FINISHED">Прочитано</button>
+            <button class="reading-filter-btn" data-status="ABANDONED">Брошено</button>
+        </div>
+        <div id="reading-list" class="books-grid"></div>
+        <div class="pagination-container">
+            <button type="button" id="reading-prev-page" class="btn-pagination" disabled>← Назад</button>
+            <span id="reading-page-info">Страница 1 из 1</span>
+            <button type="button" id="reading-next-page" class="btn-pagination">Вперед →</button>
+        </div>
+    </section>
+
+    <section id="stats-section" style="display: none;">
+        <div class="section-header"><h2>Статистика</h2></div>
+    </section>
+
+</main>
+
+<div id="add-book-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2>Новая книга</h2>
+        <form id="add-book-form">
+            <div class="form-row">
+                <input type="text" id="add-title" placeholder="Название" required>
+                <input type="text" id="add-author" placeholder="Автор" required>
+            </div>
+            <div class="form-row">
+                <input type="number" id="add-year" placeholder="Год издания" min="0" max="2100">
+                <input type="number" id="add-pages" placeholder="Кол-во страниц" required min="1">
+            </div>
+            <input type="text" id="add-isbn" placeholder="ISBN (10 или 13 цифр)">
+            <input type="text" id="add-series" placeholder="Серия / Цикл">
+            <textarea id="add-description" placeholder="Описание (до 2000 символов)" rows="3"></textarea>
+            <button type="submit" class="btn-primary">Добавить в библиотеку</button>
+        </form>
+    </div>
+</div>
+
+<div id="start-reading-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeStartReadingModal()">&times;</span>
+        <h2>Начать чтение</h2>
+        <form id="start-reading-form">
+            <input type="text" id="book-search-input" placeholder="Поиск по названию или автору..." autocomplete="off">
+            <div id="book-search-results" class="book-search-results"></div>
+            <button type="submit" class="btn-primary" style="margin-top: 15px;">Начать читать</button>
+        </form>
+    </div>
+</div>
+
+<div id="reading-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeReadingModal()">&times;</span>
+        <h2 id="reading-book-title">Название книги</h2>
+        <p id="reading-book-author" style="color: #666; margin-top: -15px;"></p>
+
+        <div class="progress-container" style="margin: 20px 0;">
+            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+            <span id="progress-text">0%</span>
+        </div>
+
+        <form id="update-progress-form">
+            <input type="hidden" id="reading-entry-id">
+            <div class="progress-form-row">
+                <label for="current-page-input">Текущая страница:</label>
+                <input type="number" id="current-page-input" required min="0">
+            </div>
+            <button type="submit" class="btn-primary">Сохранить прогресс</button>
+        </form>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+        <button class="btn-secondary" onclick="openFinishForm()">Завершить чтение</button>
+        <button id="delete-reading-btn" class="btn-secondary">Удалить запись чтения</button>
+
+        <form id="finish-reading-form" style="display: none; margin-top: 20px;">
+            <h3>Завершение</h3>
+            <div class="progress-form-row">
+                <input type="number" id="finish-score" placeholder="Оценка (1-10)" min="1" max="10" required
+                       style="width:140px;">
+            </div>
+            <label class="checkbox-label">
+                <input type="checkbox" id="finish-abandon">
+                <span class="checkbox-custom"></span>
+                Брошена
+            </label>
+            <textarea id="finish-notes" placeholder="Твои мысли о книге..." style="margin-top:10px;"></textarea>
+            <button type="submit" class="btn-success">Готово</button>
+        </form>
+    </div>
+</div>
+
+<div id="finish-status-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeFinishModal()">&times;</span>
+        <h2 id="finish-modal-title">Завершить чтение</h2>
+        <form id="finish-status-form">
+            <div class="progress-form-row" style="margin-bottom:10px;">
+                <label for="finish-modal-score">Оценка (1–10):</label>
+                <input type="number" id="finish-modal-score" min="1" max="10" required style="width:80px;">
+            </div>
+            <div id="finish-modal-all-pages-row" style="display:none; align-items:center; margin-bottom:10px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="finish-modal-all-pages">
+                    <span class="checkbox-custom"></span>
+                    Засчитать все страницы
+                </label>
+            </div>
+            <textarea id="finish-modal-notes" placeholder="Заметки (необязательно)..." rows="3"></textarea>
+            <button type="submit" class="btn-primary" style="margin-top:10px;">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+<div id="edit-book-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeEditModal()">&times;</span>
+        <h2>Редактировать книгу</h2>
+        <form id="edit-book-form">
+            <input type="hidden" id="edit-book-id">
+            <div class="form-row">
+                <input type="text" id="edit-title" placeholder="Название">
+                <input type="text" id="edit-author" placeholder="Автор">
+            </div>
+            <div class="form-row">
+                <input type="number" id="edit-year" placeholder="Год издания" min="0" max="2100">
+                <input type="number" id="edit-pages" placeholder="Кол-во страниц" min="1">
+            </div>
+            <input type="text" id="edit-isbn" placeholder="ISBN">
+            <input type="text" id="edit-series" placeholder="Серия / Цикл">
+            <textarea id="edit-description" placeholder="Описание" rows="3"></textarea>
+            <button type="submit" class="btn-primary">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
+
+<div id="confirm-delete-modal" class="modal">
+    <div class="modal-content modal-content--compact">
+        <h2>Удалить книгу?</h2>
+        <p style="color: var(--color-muted); margin-bottom: 24px;">Это действие необратимо</p>
+        <div class="confirm-actions">
+            <button id="confirm-delete-btn" class="btn-danger">Удалить</button>
+            <button onclick="closeConfirmDeleteModal()" class="btn-secondary">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirm-start-modal" class="modal">
+    <div class="modal-content modal-content--compact">
+        <h2>Начать чтение?</h2>
+        <p class="confirm-book-title" id="confirm-book-title"></p>
+        <p class="confirm-book-author" id="confirm-book-author"></p>
+        <div class="confirm-actions">
+            <button id="confirm-start-btn" class="btn-primary">Начать</button>
+            <button onclick="closeConfirmStartModal()" class="btn-secondary">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirm-delete-reading-modal" class="modal">
+    <div class="modal-content modal-content--compact">
+        <h2>Удалить запись чтения?</h2>
+        <p style="color: var(--color-muted); margin-bottom: 24px;">Это действие необратимо</p>
+        <div class="confirm-actions">
+            <button id="confirm-delete-reading-btn" class="btn-danger">Удалить</button>
+            <button onclick="closeDeleteReadingModal()" class="btn-secondary">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirm-restart-modal" class="modal">
+    <div class="modal-content modal-content--compact">
+        <h2>Читать заново?</h2>
+        <p class="confirm-book-title" id="restart-book-title"></p>
+        <p class="confirm-book-author" id="restart-book-author"></p>
+        <p style="color: var(--color-muted); font-size:13px; margin-bottom:20px;">
+            Текущая запись будет удалена и создана новая
+        </p>
+        <div class="confirm-actions">
+            <button id="confirm-restart-btn" class="btn-primary">Начать заново</button>
+            <button onclick="closeConfirmRestartModal()" class="btn-secondary">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

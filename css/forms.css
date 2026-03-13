@@ -1,0 +1,119 @@
+.auth-card {
+    background: var(--color-surface);
+    padding: 30px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    width: 320px;
+    margin: 0 auto;
+}
+
+.auth-card h2 {
+    color: var(--color-dark);
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-input-bg);
+    font-family: inherit;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-input-bg);
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.form-row input {
+    flex: 1;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-dark);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-dark-deep);
+}
+
+.btn-secondary {
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+
+.btn-success {
+    background-color: var(--color-success-dark);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-success:hover {
+    background-color: #219a52;
+}
+
+.btn-add {
+    background-color: var(--color-dark);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+    background-color: var(--color-dark-deep);
+}
+
+.toggle-text {
+    font-size: 13px;
+    margin-top: 15px;
+    color: #666;
+}
+
+.toggle-text span {
+    color: var(--color-dark);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+}

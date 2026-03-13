@@ -1,0 +1,136 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: var(--color-bg);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: var(--radius-xl);
+    width: 450px;
+    max-width: 90%;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--color-dark);
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: var(--color-dark-deep);
+}
+
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #eee;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--color-progress);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+#progress-text,
+.progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-content--compact {
+    width: 340px;
+    text-align: center;
+    padding: 35px 30px;
+}
+
+.modal-content--compact h2 {
+    margin: 0 0 12px;
+    color: var(--color-dark);
+}
+
+.confirm-book-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 4px;
+}
+
+.confirm-book-author {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin: 0 0 24px;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.confirm-actions .btn-primary,
+.confirm-actions .btn-secondary {
+    flex: 1;
+    margin: 0;
+}
+
+.progress-form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+}
+
+.progress-form-row label {
+    white-space: nowrap;
+    font-size: 14px;
+    color: var(--color-dark);
+    flex-shrink: 0;
+}
+
+.progress-form-row input {
+    width: 100px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.btn-danger {
+    flex: 1;
+    padding: 10px;
+    background-color: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
